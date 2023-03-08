@@ -1,0 +1,21 @@
+@commomString = "Sucess test"
+
+POST http://localhost:8000/orders/success HTTP/1.1
+content-type: application/json
+
+{
+	"user": {
+		"firstName": {{commomString}},
+		"lastName": {{commomString}}
+	},
+	"products": [
+		{
+			"name": {{commomString}},
+			"description": {{commomString}}
+		},
+		{
+			"name": {{commomString}},
+			"description": {{commomString}}
+		}
+	]
+}
