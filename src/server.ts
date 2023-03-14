@@ -2,14 +2,25 @@ import express, { Express, Request, Response } from 'express';
 import { Datasource, InitDatabase } from './database/typeorm/datasource';
 import { OrderRepository, ProductRepository, UserRepository } from './database/typeorm/repositories';
 import { CreateOrderRequest } from './dtos/CreateOrder';
-import { ConfigureTransactionManager } from './TransactionManager';
+import { TransactionManager } from './TransactionManager';
 import { OrderUsecase } from './usecases/Order';
 
 const Port = 8000
 const App: Express = express()
-InitDatabase()
-ConfigureTransactionManager(Datasource)
 App.use(express.json())
+
+InitDatabase()
+
+/**
+* Transaction manager initialization
+*/
+TransactionManager
+  .getInstance()
+  .addDataSource(Datasource)
+  .setDefaultDataSource(Datasource)
+/**
+* Transaction manager initialization end
+*/
 
 const userRepository = new UserRepository()
 const productRepository = new ProductRepository()
