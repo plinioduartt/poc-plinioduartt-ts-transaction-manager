@@ -2,8 +2,8 @@ import express, { Express, Request, Response } from 'express';
 import { Datasource, InitDatabase } from './database/typeorm/datasource';
 import { OrderRepository, ProductRepository, UserRepository } from './database/typeorm/repositories';
 import { CreateOrderRequest } from './dtos/CreateOrder';
-import { TransactionManager } from './TransactionManager';
 import { OrderUsecase } from './usecases/Order';
+import { TransactionManager } from '@plinioduartt/ts-transaction-manager'
 
 const Port = 8000
 const App: Express = express()

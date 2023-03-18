@@ -1,7 +1,7 @@
 import { Order, Product, User } from "../database/typeorm/entities"
 import { OrderRepository, ProductRepository, UserRepository } from "../database/typeorm/repositories"
 import { CreateOrderRequest, CreateOrderResponse } from "../dtos/CreateOrder"
-import { Transactional } from "../TransactionManager"
+import { Transactional } from '@plinioduartt/ts-transaction-manager'
 
 export class OrderUsecase {
   constructor(
@@ -10,7 +10,7 @@ export class OrderUsecase {
     private readonly orderRepository: OrderRepository,
   ) { }
 
-  @Transactional()
+  @Transactional({ logging: false })
   async executeWithSuccess(request: CreateOrderRequest): Promise<CreateOrderResponse> {
     const user: User = new User(request.user)
     const products: Product[] = request.products.map((product: Product) => new Product(product))
