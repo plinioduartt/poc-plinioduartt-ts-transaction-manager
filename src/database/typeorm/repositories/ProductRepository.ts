@@ -1,15 +1,10 @@
-import { Repository } from "typeorm";
-import { Datasource } from "../datasource";
-import { Product } from "../entities";
+import { TransactionManager } from "typeorm-ez-transaction";
+import { Product } from "../entities/Product";
 
 export class ProductRepository {
-  private readonly repository: Repository<Product>
-  constructor() {
-    this.repository = Datasource.getRepository(Product)
-  }
-
   async create(data: Product[]): Promise<Product[]> {
-    return await this.repository.save(data)
+    const repository = TransactionManager.getManager()?.getRepository(Product)
+    return await repository.save(data)
   }
 
   async createWithFailure(_data: Product[]): Promise<Product[]> {

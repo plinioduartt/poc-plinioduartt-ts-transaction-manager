@@ -1,15 +1,10 @@
-import { Repository } from "typeorm";
-import { Datasource } from "../datasource";
-import { Order } from "../entities";
+import { TransactionManager } from "typeorm-ez-transaction";
+import { Order } from "../entities/Order";
 
 export class OrderRepository {
-  private readonly repository: Repository<Order>
-  constructor() {
-    this.repository = Datasource.getRepository(Order)
-  }
-
   async create(data: Order): Promise<Order> {
-    return await this.repository.save(data)
+    const repository = TransactionManager.getManager()?.getRepository(Order)
+    return await repository.save(data)
   }
 
   async createWithFailure(_data: Order): Promise<Order> {

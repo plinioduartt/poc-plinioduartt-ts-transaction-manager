@@ -1,7 +1,6 @@
-import { Order, Product, User } from "../database/typeorm/entities"
 import { OrderRepository, ProductRepository, UserRepository } from "../database/typeorm/repositories"
 import { CreateOrderRequest, CreateOrderResponse } from "../dtos/CreateOrder"
-import { Transactional } from '@plinioduartt/ts-transaction-manager'
+import { Transactional } from 'typeorm-ez-transaction'
 
 export class OrderUsecase {
   constructor(
@@ -10,25 +9,17 @@ export class OrderUsecase {
     private readonly orderRepository: OrderRepository,
   ) { }
 
-  @Transactional({ logging: false })
+  @Transactional({ logging: true })
   async executeWithSuccess(request: CreateOrderRequest): Promise<CreateOrderResponse> {
-    const user: User = new User(request.user)
-    const products: Product[] = request.products.map((product: Product) => new Product(product))
-    const order: Order = new Order({ user, products })
-
-    await this.userRepository.create(user)
-    await this.productRepository.create(products)
-    return await this.orderRepository.create(order)
+    await this.userRepository.create(request.user)
+    await this.productRepository.create(request.products)
+    return await this.orderRepository.create(request)
   }
 
-  @Transactional({ dataSource: 'typeorm', logging: true })
+  @Transactional({ logging: true })
   async executeWithFailure(request: CreateOrderRequest): Promise<CreateOrderResponse> {
-    const user: User = new User(request.user)
-    const products: Product[] = request.products.map((product: Product) => new Product(product))
-    const order: Order = new Order({ user, products })
-
-    await this.userRepository.create(user)
-    await this.productRepository.create(products)
-    return await this.orderRepository.createWithFailure(order)
+    await this.userRepository.create(request.user)
+    await this.productRepository.create(request.products)
+    return await this.orderRepository.createWithFailure(request)
   }
 }
